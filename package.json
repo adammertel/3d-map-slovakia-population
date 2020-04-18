@@ -1,0 +1,30 @@
+{
+  "name": "three-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adammertel/three-test.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adammertel/three-test/issues"
+  },
+  "homepage": "https://github.com/adammertel/three-test#readme",
+  "devDependencies": {
+    "three": "^0.115.0",
+    "typescript": "^3.8.3",
+    "react-three-fiber": "^4.0.28"
+  },
+  "dependencies": {
+    "@types/node": "^13.13.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}
