@@ -13,13 +13,18 @@ const Plane = (props) => {
   });
 
   return (
-    <mesh {...props}>
+    <mesh {...props} castShadow>
       <planeGeometry
         attach="geometry"
         args={[50, 50, 49, 49]}
         vertices={vectors}
       />
-      <meshPhongMaterial attach="material" color={"grey"} wireframe={true} />
+      <meshStandardMaterial
+        attach="material"
+        color="lightblue"
+        metalness={1}
+        fog
+      />
     </mesh>
   );
 };
