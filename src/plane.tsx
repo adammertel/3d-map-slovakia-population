@@ -12,8 +12,6 @@ const Plane = (props) => {
     });
   });
 
-  console.log(vectors);
-
   return (
     <mesh {...props}>
       <planeGeometry
