@@ -29,6 +29,16 @@ function Rig({ drag, mouseMovePosition, mouseDownPosition, mouseWheel }) {
   return null;
 }
 
+const boxes = [];
+[...Array(25).keys()].forEach((x) => {
+  [...Array(25).keys()].forEach((y) => {
+    const z = 1 + (x + y) * 0.25 + parseInt(Math.random() * 2);
+    boxes.push(
+      <Box key={x + "-" + y} sizes={[1, 1, z]} position={[x, y, z / 2]} />
+    );
+  });
+});
+
 const App: React.FC = () => {
   const mouseDownPosition = useRef([0, 0]);
   const mouseMovePosition = useRef([0, 0]);
@@ -62,18 +72,15 @@ const App: React.FC = () => {
         //mouseWheel.current = 0;
       }}
     >
-      <ambientLight intensity={0.4} />
-      <pointLight intensity={20} position={[-10, -25, -10]} />
-      <spotLight
+      <pointLight
         intensity={4}
-        angle={Math.PI / 8}
-        position={[0, 200, 30]}
+        position={[0, 200, 40]}
         onUpdate={(self) => self.lookAt(new THREE.Vector3(0, 0, 0))}
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
+        castShadow
       />
-      <Plane position={[-25, -25, 0]} />,
-      <Box position={[0, 200, 200]} />
+      {boxes}
       <Rig
         drag={drag}
         mouseMovePosition={mouseMovePosition}
@@ -85,5 +92,6 @@ const App: React.FC = () => {
 };
 /*
 <Box position={[1.2, -2, 0]} />
+<Plane position={[-25, -25, 0]} />,
 */
 export default App;
