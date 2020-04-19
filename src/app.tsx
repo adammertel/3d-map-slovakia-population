@@ -5,6 +5,10 @@ import { Canvas, useFrame, useThree } from "react-three-fiber";
 import Box from "./box";
 import Plane from "./plane";
 
+const data = require("./../data/svk.json");
+
+console.log(data);
+
 function Rig({ drag, mouseMovePosition, mouseDownPosition, mouseWheel }) {
   const { camera } = useThree();
 
@@ -30,12 +34,15 @@ function Rig({ drag, mouseMovePosition, mouseDownPosition, mouseWheel }) {
 }
 
 const boxes = [];
-[...Array(25).keys()].forEach((x) => {
-  [...Array(25).keys()].forEach((y) => {
-    const z = 1 + (x + y) * 0.25 + parseInt(Math.random() * 2);
-    boxes.push(
-      <Box key={x + "-" + y} sizes={[1, 1, z]} position={[x, y, z / 2]} />
-    );
+data.forEach((row, x) => {
+  row.forEach((value, y) => {
+    if (value) {
+      const z = value / 10;
+
+      boxes.push(
+        <Box key={x + "-" + y} sizes={[1, 1, z]} position={[x, -y, z / 2]} />
+      );
+    }
   });
 });
 
@@ -47,7 +54,7 @@ const App: React.FC = () => {
 
   return (
     <Canvas
-      camera={{ position: [0, -20, 30], fov: 120 }}
+      camera={{ position: [0, -30, 70], fov: 120 }}
       onMouseDown={(e) => {
         mouseMovePosition.current = [e.clientX, e.clientY];
         mouseDownPosition.current = [e.clientX, e.clientY];
