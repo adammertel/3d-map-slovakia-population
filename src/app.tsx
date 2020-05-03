@@ -12,21 +12,20 @@ console.log(data);
 function Rig({ drag, mouseMovePosition, mouseDownPosition, mouseWheel }) {
   const { camera } = useThree();
 
-  const moveBonus = 0;
+  const moveMultiplier = 0.005;
 
   useFrame(() => {
     const move = mouseMovePosition.current;
     const down = mouseDownPosition.current;
-    let theta = -(move[0] - down[0]) * 0.75 + moveBonus;
-    let phi = (move[1] - down[1]) * 0.75 + moveBonus;
-    //phi = Math.min(180, Math.max(0, phi));
 
-    if (theta || phi) {
-      camera.position.x +=
-        Math.sin((theta * Math.PI) / 360) * Math.cos((phi * Math.PI) / 360);
-      camera.position.y += Math.sin((phi * Math.PI) / 360);
-    }
-    camera.position.z += mouseWheel.current * 0.05;
+    camera.position.x -= (move[0] - down[0]) * moveMultiplier;
+    camera.position.y += (move[1] - down[1]) * moveMultiplier;
+
+    const zMin = 10;
+    const zMax = 300;
+    const zMultiplier = 0.05;
+    const newZ = camera.position.z - mouseWheel.current * zMultiplier;
+    camera.position.z = Math.max(zMin, Math.min(zMax, newZ));
 
     //console.log(camera.position);
   });
@@ -71,12 +70,7 @@ const App: React.FC = () => {
         }
       }}
       onWheel={(e) => {
-        //console.log("y", e.deltaY);
-        mouseWheel.current = e.deltaY;
-        setTimeout(() => {
-          mouseWheel.current = 0;
-        }, 500);
-        //mouseWheel.current = 0;
+        mouseWheel.current = Math.abs(e.deltaY) > 5 ? e.deltaY : 0;
       }}
     >
       <pointLight
