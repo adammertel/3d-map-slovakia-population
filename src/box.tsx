@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useFrame } from "react-three-fiber";
 
-const Box = ({ position, sizes }) => {
+const Box = ({ position, sizes, id }) => {
   // This reference will give us direct access to the mesh
   const mesh = useRef();
 
@@ -13,6 +13,7 @@ const Box = ({ position, sizes }) => {
     <mesh
       position={position}
       ref={mesh}
+      key={id}
       //onClick={(e) => setActive(!active)}
       //onPointerOver={(e) => setHover(true)}
       //onPointerOut={(e) => setHover(false)}

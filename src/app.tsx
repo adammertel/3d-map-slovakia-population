@@ -27,7 +27,12 @@ function Rig({ drag, mouseMovePosition, mouseDownPosition, mouseWheel }) {
     const newZ = camera.position.z - mouseWheel.current * zMultiplier;
     camera.position.z = Math.max(zMin, Math.min(zMax, newZ));
 
-    //console.log(camera.position);
+    // actual lookAt
+    const look = new THREE.Vector3(0, 0, -camera.position.x)
+      .applyQuaternion(camera.quaternion)
+      .add(camera.position);
+    //camera.lookAt(new THREE.Vector3(10, 20, 30));
+    //console.log(look);
   });
   return null;
 }
@@ -35,11 +40,15 @@ function Rig({ drag, mouseMovePosition, mouseDownPosition, mouseWheel }) {
 const boxes = [];
 data.forEach((row, x) => {
   row.forEach((value, y) => {
-    if (value) {
+    if (value !== false && value !== 0) {
       const z = value / 10;
 
       boxes.push(
-        <Box key={x + "-" + y} sizes={[1, 1, z]} position={[x, -y, z / 2]} />
+        <Box
+          id={parseInt([x, y].join("000"))}
+          sizes={[1, 1, z]}
+          position={[x, -y, z / 2]}
+        />
       );
     }
   });
@@ -70,7 +79,7 @@ const App: React.FC = () => {
         }
       }}
       onWheel={(e) => {
-        mouseWheel.current = Math.abs(e.deltaY) > 5 ? e.deltaY : 0;
+        mouseWheel.current = Math.abs(e.deltaY) > 10 ? e.deltaY : 0;
       }}
     >
       <pointLight
