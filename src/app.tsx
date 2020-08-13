@@ -9,9 +9,21 @@ import Camera from "./camera";
 import Plane from "./plane";
 import Text from "./text";
 
-const data = require("./../data/svk.json");
+const dataFile = require("./../data/svk.json");
 
 //console.log(data);
+
+const translateCoordinatesToPx = ([x, y]) => {
+  const meta = dataFile.meta;
+  const pxSize = meta.pxSize;
+  const dX = x - meta.coordinatesOrigin[1];
+  const dY = y - meta.coordinatesOrigin[0];
+  console.log(dX, dY);
+  return [dY / pxSize, dX / pxSize];
+};
+
+const trnava = translateCoordinatesToPx([48.377779, 17.590289]);
+console.log(trnava);
 
 function Rig({
   drag,
@@ -148,11 +160,11 @@ const App: React.FC = () => {
         castShadow
       />
       <>
-        {data
+        {dataFile.data
           .map((row, x) => {
             return row.map((value, y) => {
               if (value !== false && value !== 0 && x < 100) {
-                const z = value / 10;
+                const z = value / 5;
                 return (
                   <Box
                     keyValue={x + "-" + y}
@@ -166,7 +178,7 @@ const App: React.FC = () => {
           .flat(2)}
       </>
       <>
-        <mesh position={[50, -150, 25]} receiveShadow castShadow>
+        <mesh position={[...trnava, 25]} receiveShadow castShadow>
           <boxBufferGeometry
             attach="geometry"
             args={[0.1, 0.1, 50]}
@@ -175,15 +187,16 @@ const App: React.FC = () => {
           <meshStandardMaterial
             attach="material"
             key="material"
-            color={"hotpink"}
+            color={"black"}
           />
         </mesh>
 
         <Text
           color="black"
           size={2}
-          position={[50, -150, 50]}
-          children="random town"
+          position={[...trnava, 50]}
+          children="Trnava"
+          rotation={[0, camera.rotation.y, 0]}
         />
       </>
     </Canvas>

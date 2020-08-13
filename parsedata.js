@@ -13,6 +13,11 @@ const load = async () => {
   const w = image.fileDirectory.ImageWidth;
   const h = image.fileDirectory.ImageLength;
   console.log(w, h);
+  const pxSize = image.fileDirectory.ModelPixelScale[0];
+  const coordinatesOrigin = [
+    image.fileDirectory.ModelTiepoint[3],
+    image.fileDirectory.ModelTiepoint[4],
+  ];
 
   const [values] = await image.readRasters({
     width: w,
@@ -32,7 +37,13 @@ const load = async () => {
     }
   }
   //console.log(imageArr);
-  fs.writeFileSync("data/svk.json", JSON.stringify(imageArr));
+  fs.writeFileSync(
+    "data/svk.json",
+    JSON.stringify({
+      data: imageArr,
+      meta: { pxSize, coordinatesOrigin, w, h },
+    })
+  );
 };
 
 load();
