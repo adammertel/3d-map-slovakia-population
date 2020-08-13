@@ -1,12 +1,13 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
 import * as THREE from "three";
-import { Canvas, useFrame, useThree } from "react-three-fiber";
+import { Canvas, useFrame, useLoader, useThree } from "react-three-fiber";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import Box from "./box";
 import Camera from "./camera";
 import Plane from "./plane";
+import Text from "./text";
 
 const data = require("./../data/svk.json");
 
@@ -96,8 +97,43 @@ const App: React.FC = () => {
     1,
     1000
   );
+  //camera.lookAt(300, -300, 0);
+  camera.position.set(0, 0, 200);
+
+  /*
+  const font = new THREE.FontLoader().parse(fontFile);
+
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    console.log("looking at text 1");
+    setTimeout(() => {
+      console.log("looking at text 2", textRef.current.position);
+      camera.lookAt(textRef.current.position);
+    }, 3000);
+  }, []);
+
+  const font = useLoader(
+    THREE.FontLoader,
+    "three/examples/fonts/helvetiker_regular.typeface.json"
+  );
+
+  console.log(font);
+  //const font = new THREE.Font("helvetiker");
+  const textConfig = {
+    font,
+    size: 120,
+    height: 300,
+    curveSegments: 32,
+    bevelEnabled: true,
+    bevelThickness: 6,
+    bevelSize: 2.5,
+    bevelOffset: 0,
+    bevelSegments: 8,
+  };
+  */
+
   //camera.lookAt(new THREE.Vector3(0, -30, 200));
-  camera.position.set(0, -300, 200);
 
   return (
     <Canvas camera={camera}>
@@ -128,6 +164,27 @@ const App: React.FC = () => {
             });
           })
           .flat(2)}
+      </>
+      <>
+        <mesh position={[50, -150, 25]} receiveShadow castShadow>
+          <boxBufferGeometry
+            attach="geometry"
+            args={[0.1, 0.1, 50]}
+            key="buffer"
+          />
+          <meshStandardMaterial
+            attach="material"
+            key="material"
+            color={"hotpink"}
+          />
+        </mesh>
+
+        <Text
+          color="black"
+          size={2}
+          position={[50, -150, 50]}
+          children="random town"
+        />
       </>
     </Canvas>
   );
