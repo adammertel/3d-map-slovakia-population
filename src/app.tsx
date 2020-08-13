@@ -83,25 +83,7 @@ function Rig({
 }
 
 const App: React.FC = () => {
-  const mouseDownPosition = useRef([0, 0]);
-  const mouseMovePosition = useRef([0, 0]);
-  const mouseWheel = useRef(0);
-
-  const [drag, setDrag] = useState(false);
-  const [keyDown, setKeyDown] = useState(false);
-
-  /*
-  useEffect(() => {
-    document.addEventListener("keydown", (e) => {
-      setKeyDown(e.keyCode);
-    });
-    document.addEventListener("keyup", (e) => {
-      setKeyDown(false);
-    });
-    this.controls = new OrbitControls(camera, domElement);
-    //return () => document.removeEventListener("keypress", intersect);
-  }, []);
-  */
+  useEffect(() => {}, []);
 
   const camera = new THREE.PerspectiveCamera(
     60,
@@ -111,41 +93,6 @@ const App: React.FC = () => {
   );
   //camera.lookAt(300, -300, 0);
   camera.position.set(0, 0, 200);
-
-  /*
-  const font = new THREE.FontLoader().parse(fontFile);
-
-  const textRef = useRef(null);
-
-  useEffect(() => {
-    console.log("looking at text 1");
-    setTimeout(() => {
-      console.log("looking at text 2", textRef.current.position);
-      camera.lookAt(textRef.current.position);
-    }, 3000);
-  }, []);
-
-  const font = useLoader(
-    THREE.FontLoader,
-    "three/examples/fonts/helvetiker_regular.typeface.json"
-  );
-
-  console.log(font);
-  //const font = new THREE.Font("helvetiker");
-  const textConfig = {
-    font,
-    size: 120,
-    height: 300,
-    curveSegments: 32,
-    bevelEnabled: true,
-    bevelThickness: 6,
-    bevelSize: 2.5,
-    bevelOffset: 0,
-    bevelSegments: 8,
-  };
-  */
-
-  //camera.lookAt(new THREE.Vector3(0, -30, 200));
 
   return (
     <Canvas camera={camera}>
@@ -190,14 +137,14 @@ const App: React.FC = () => {
             color={"black"}
           />
         </mesh>
-
-        <Text
-          color="black"
-          size={2}
-          position={[...trnava, 50]}
-          children="Trnava"
-          rotation={[0, camera.rotation.y, 0]}
-        />
+        <group>
+          <Text
+            color="black"
+            size={2}
+            position={[...trnava, 50]}
+            children="Trnava"
+          />
+        </group>
       </>
     </Canvas>
   );

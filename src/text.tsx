@@ -4,6 +4,17 @@ import { Canvas, useFrame, useLoader, useThree } from "react-three-fiber";
 
 import fontFile from "./sans";
 
+type TextProps = {
+  children: string;
+  size: number;
+  letterSpacing: number;
+  color: string;
+  centerX: boolean;
+  centerY: boolean;
+  rotation: [number, number, number];
+  position: [number, number, number];
+};
+
 const Text: React.FC = ({
   children,
   size = 1,
@@ -11,9 +22,16 @@ const Text: React.FC = ({
   color = "#000000",
   centerX = true,
   centerY = true,
-  ...props
-}) => {
+  rotation = [0, 0, 0],
+  position = [0, 0, 0],
+}: TextProps) => {
   const [font] = useState(() => new THREE.FontLoader().parse(fontFile));
+  console.log(rotation);
+
+  const { camera } = useThree();
+
+  const textRef = useRef(null);
+
   const [shapes, [x, y]] = useMemo(() => {
     let x = 0,
       y = 0;
@@ -35,8 +53,10 @@ const Text: React.FC = ({
               font.generateShapes(letter, size, 1)
             );
             geom.computeBoundingBox();
+
             const mesh = new THREE.Mesh(geom, mat);
             mesh.position.x = x;
+
             x += geom.boundingBox.max.x + letterSpacing;
             y = Math.max(y, geom.boundingBox.max.y);
             return mesh;
@@ -46,9 +66,17 @@ const Text: React.FC = ({
       [x, y],
     ];
   }, [font, children, size, letterSpacing, color]);
+
+  useFrame(() => {
+    textRef.current.rotation.x = camera.rotation.x;
+  });
+
   return (
-    <group {...props}>
-      <group position={[centerX ? -x / 2 : 0, centerY ? -y / 2 : 0, 0]}>
+    <group position={position}>
+      <group
+        ref={textRef}
+        position={[centerX ? -x / 2 : 0, centerY ? -y / 2 : 0, 0]}
+      >
         {shapes.map((shape, index) => (
           <primitive key={index} object={shape} />
         ))}
