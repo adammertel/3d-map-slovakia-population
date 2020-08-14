@@ -9,7 +9,8 @@ import Camera from "./camera";
 import Plane from "./plane";
 import Text from "./text";
 
-const dataFile = require("./../data/svk.json");
+const dataFile = require("./../data/population.json");
+const settlements = require("./../data/municipalities-slovakia.geojson");
 
 //console.log(data);
 
@@ -94,38 +95,33 @@ const App: React.FC = () => {
   //camera.lookAt(300, -300, 0);
   camera.position.set(0, 0, 200);
 
+  const boxes = useMemo(() => {
+    return dataFile.data
+      .map((row, x) => {
+        return row.map((value, y) => {
+          if (value !== false && value !== 0) {
+            const z = value / 5;
+            return <Box sizes={[1, 1, z]} position={[x, -y, z / 2]} />;
+          }
+        });
+      })
+      .flat(2);
+  }, []);
+
   return (
     <Canvas camera={camera}>
       <Camera />
-      <pointLight
+      <rectAreaLight
         key="light"
-        intensity={4}
-        position={[0, 200, 40]}
-        onUpdate={(self) => self.lookAt(new THREE.Vector3(0, 0, 0))}
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        intensity={50}
+        width={dataFile.data.length}
+        height={dataFile.data[0].length}
+        position={[dataFile.data.length / 2, dataFile.data[0].length / 2, 1000]}
         castShadow
       />
+      <>{boxes}</>
       <>
-        {dataFile.data
-          .map((row, x) => {
-            return row.map((value, y) => {
-              if (value !== false && value !== 0 && x < 100) {
-                const z = value / 5;
-                return (
-                  <Box
-                    keyValue={x + "-" + y}
-                    sizes={[1, 1, z]}
-                    position={[x, -y, z / 2]}
-                  />
-                );
-              }
-            });
-          })
-          .flat(2)}
-      </>
-      <>
-        <mesh position={[...trnava, 25]} receiveShadow castShadow>
+        <mesh position={[...trnava, 25]}>
           <boxBufferGeometry
             attach="geometry"
             args={[0.1, 0.1, 50]}
