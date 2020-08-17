@@ -18,15 +18,14 @@ type TextProps = {
 const Text: React.FC = ({
   children,
   size = 1,
-  letterSpacing = 0.01,
+  letterSpacing = 0.1,
   color = "#000000",
-  centerX = true,
-  centerY = true,
+  centerX = false,
+  centerY = false,
   rotation = [0, 0, 0],
   position = [0, 0, 0],
 }: TextProps) => {
   const [font] = useState(() => new THREE.FontLoader().parse(fontFile));
-  console.log(rotation);
 
   const { camera } = useThree();
 
@@ -46,7 +45,7 @@ const Text: React.FC = ({
       letters
         .map((letter) => {
           if (letter === " ") {
-            x += size / 2;
+            x -= size / 2;
             return null;
           } else {
             const geom = new THREE.ShapeGeometry(
@@ -55,10 +54,13 @@ const Text: React.FC = ({
             geom.computeBoundingBox();
 
             const mesh = new THREE.Mesh(geom, mat);
-            mesh.position.x = x;
+            mesh.position.x = -x;
 
-            x += geom.boundingBox.max.x + letterSpacing;
-            y = Math.max(y, geom.boundingBox.max.y);
+            //mesh.rotation.x = Math.PI * 1;
+            //mesh.rotation.z = Math.PI * 1;
+
+            x -= geom.boundingBox.max.x + letterSpacing;
+            y = -Math.max(y, geom.boundingBox.max.y);
             return mesh;
           }
         })
@@ -68,7 +70,10 @@ const Text: React.FC = ({
   }, [font, children, size, letterSpacing, color]);
 
   useFrame(() => {
-    textRef.current.rotation.x = camera.rotation.x;
+    const cameraZ = camera.rotation.z;
+
+    textRef.current.rotation.y = cameraZ;
+    textRef.current.rotation.z = -Math.PI * 0.5;
   });
 
   return (
