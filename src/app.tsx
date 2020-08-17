@@ -83,28 +83,39 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <Canvas camera={camera}>
-      <Camera />
-      <rectAreaLight
-        key="light"
-        intensity={40}
-        width={dataFile.data.length * 2}
-        height={dataFile.data.length / 2}
-        position={[0, 0, 1000]}
-        castShadow
-      />
-      <ambientLight
-        key="light-ambient"
-        intensity={1}
-        color={new THREE.Color("#fff")}
-      />
-      <>
-        <group>{boxes}</group>
-      </>
-      <>
-        <group>{labels}</group>
-      </>
-    </Canvas>
+    <div>
+      <Canvas camera={camera} shadowMap>
+        <Camera />
+        <spotLight
+          key="light"
+          intensity={1.5}
+          position={[
+            -dataFile.data[0].length / 2,
+            300,
+            -dataFile.data[0].length * 2,
+          ]}
+          castShadow
+        />
+        <ambientLight key="light-ambient" intensity={0.1} color="#fff" />
+        <>
+          <group>{boxes}</group>
+        </>
+        <>
+          <group>{labels}</group>
+        </>
+      </Canvas>
+      <a
+        href="https://github.com/adammertel/3d-map-slovakia-population"
+        style={{
+          position: "absolute",
+          bottom: "2%",
+          right: "2%",
+          fontSize: "2em",
+        }}
+      >
+        info
+      </a>
+    </div>
   );
 };
 /*
