@@ -75,11 +75,12 @@ const Camera = ({}) => {
     // controls.minAzimuthAngle = Math.PI * 0;
     // controls.maxAzimuthAngle = Math.PI * 0;
 
-    camera.position.x = -450;
+    camera.position.x = -150;
     camera.position.y = 170;
     camera.position.z = -350;
 
-    camera.lookAt(0, 500, 500);
+    controls.target = new THREE.Vector3(-200, 0, 0);
+
     controls.update();
 
     return () => {
