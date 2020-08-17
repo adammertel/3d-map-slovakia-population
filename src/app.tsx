@@ -31,21 +31,19 @@ const App: React.FC = () => {
     1,
     1000
   );
-  //camera.lookAt(300, -300, 0);
-  camera.position.set(0, 0, 200);
 
   const labels = useMemo(() => {
     return settlements.features
-      .filter((s) => s.properties.population > 20000)
+      .filter((s) => s.properties.population > 15000)
       .map((settlement) => {
         const coords = settlement.geometry.coordinates;
         const pxs = translateCoordinatesToPx([coords[1], coords[0]]);
         return (
           <group>
-            <mesh position={[...pxs, 25]}>
+            <mesh position={[-pxs[0], 25, pxs[1]]}>
               <boxBufferGeometry
                 attach="geometry"
-                args={[0.1, 0.1, 50]}
+                args={[0.1, 50, 0.1]}
                 key="buffer"
               />
               <meshStandardMaterial
@@ -57,7 +55,7 @@ const App: React.FC = () => {
             <Text
               color="black"
               size={2}
-              position={[...pxs, 50]}
+              position={[-pxs[0], 50, pxs[1]]}
               children={settlement.properties.name}
             />
           </group>
@@ -68,10 +66,10 @@ const App: React.FC = () => {
   const boxes = useMemo(() => {
     return dataFile.data
       .map((row, x) => {
-        return row.map((value, y) => {
+        return row.map((value, z) => {
           if (value !== false && value !== 0) {
-            const z = value / 5;
-            return <Box sizes={[1, 1, z]} position={[x, -y, z / 2]} />;
+            const y = value / 5;
+            return <Box sizes={[1, y, 1]} position={[-x, y / 2, -z]} />;
           }
         });
       })
@@ -83,10 +81,10 @@ const App: React.FC = () => {
       <Camera />
       <rectAreaLight
         key="light"
-        intensity={50}
-        width={dataFile.data.length}
-        height={dataFile.data[0].length}
-        position={[dataFile.data.length / 2, dataFile.data[0].length / 2, 1000]}
+        intensity={100}
+        width={dataFile.data.length * 2}
+        height={dataFile.data.length / 2}
+        position={[0, 100, 1000]}
         castShadow
       />
       <>

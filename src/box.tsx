@@ -16,15 +16,11 @@ const Box = ({ position, sizes }) => {
       //onClick={(e) => setActive(!active)}
       //onPointerOver={(e) => setHover(true)}
       //onPointerOut={(e) => setHover(false)}
-      receiveShadow
+
       castShadow
     >
       <boxBufferGeometry attach="geometry" args={sizes} key="buffer" />
-      <meshStandardMaterial
-        attach="material"
-        key="material"
-        color={"hotpink"}
-      />
+      <meshStandardMaterial attach="material" key="material" color="#3182bd" />
     </mesh>
   );
 };
