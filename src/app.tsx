@@ -10,7 +10,7 @@ import Plane from "./plane";
 import Text from "./text";
 
 const dataFile = require("./../data/population.json");
-const settlements = require("./../data/municipalities-slovakia.geojson");
+import settlements from "./../data/municipalities-slovakia.json";
 
 //console.log(data);
 
@@ -19,69 +19,8 @@ const translateCoordinatesToPx = ([x, y]) => {
   const pxSize = meta.pxSize;
   const dX = x - meta.coordinatesOrigin[1];
   const dY = y - meta.coordinatesOrigin[0];
-  console.log(dX, dY);
   return [dY / pxSize, dX / pxSize];
 };
-
-const trnava = translateCoordinatesToPx([48.377779, 17.590289]);
-console.log(trnava);
-
-function Rig({
-  drag,
-  keyDown,
-  mouseMovePosition,
-  mouseDownPosition,
-  mouseWheel,
-}) {
-  const { camera } = useThree();
-
-  const moveMultiplier = 0.025 * (camera.position.z / 100);
-
-  const rotationSpeed = 0.01;
-
-  useFrame(() => {
-    //console.log(camera.rotation);
-    const move = mouseMovePosition.current;
-    const down = mouseDownPosition.current;
-
-    camera.position.x -= (move[0] - down[0]) * moveMultiplier;
-    camera.position.y += (move[1] - down[1]) * moveMultiplier;
-
-    const zMin = 10;
-    const zMax = 300;
-    const zMultiplier = 0.05;
-    const newZ = camera.position.z - mouseWheel.current * zMultiplier;
-    camera.position.z = Math.max(zMin, Math.min(zMax, newZ));
-
-    // actual lookAt
-    const look = new THREE.Vector3(0, 0, -camera.position.x)
-      .applyQuaternion(camera.quaternion)
-      .add(camera.position);
-
-    //left
-    if (keyDown === 37) {
-      camera.rotation.y += rotationSpeed;
-      //camera.rotation.z += rotationSpeed;
-    }
-    //right
-    if (keyDown === 39) {
-      camera.rotation.y -= rotationSpeed;
-      //camera.rotation.z -= rotationSpeed;
-    }
-    //up
-    if (keyDown === 38) {
-      camera.rotation.x += rotationSpeed;
-    }
-    //down
-    if (keyDown === 40) {
-      camera.rotation.x -= rotationSpeed;
-    }
-    //
-    //camera.lookAt(new THREE.Vector3(10, 20, 30));
-    //console.log(look);
-  });
-  return null;
-}
 
 const App: React.FC = () => {
   useEffect(() => {}, []);
@@ -94,6 +33,37 @@ const App: React.FC = () => {
   );
   //camera.lookAt(300, -300, 0);
   camera.position.set(0, 0, 200);
+
+  const labels = useMemo(() => {
+    return settlements.features
+      .filter((s) => s.properties.population > 20000)
+      .map((settlement) => {
+        const coords = settlement.geometry.coordinates;
+        const pxs = translateCoordinatesToPx([coords[1], coords[0]]);
+        return (
+          <group>
+            <mesh position={[...pxs, 25]}>
+              <boxBufferGeometry
+                attach="geometry"
+                args={[0.1, 0.1, 50]}
+                key="buffer"
+              />
+              <meshStandardMaterial
+                attach="material"
+                key="material"
+                color={"black"}
+              />
+            </mesh>
+            <Text
+              color="black"
+              size={2}
+              position={[...pxs, 50]}
+              children={settlement.properties.name}
+            />
+          </group>
+        );
+      });
+  }, []);
 
   const boxes = useMemo(() => {
     return dataFile.data
@@ -119,28 +89,11 @@ const App: React.FC = () => {
         position={[dataFile.data.length / 2, dataFile.data[0].length / 2, 1000]}
         castShadow
       />
-      <>{boxes}</>
       <>
-        <mesh position={[...trnava, 25]}>
-          <boxBufferGeometry
-            attach="geometry"
-            args={[0.1, 0.1, 50]}
-            key="buffer"
-          />
-          <meshStandardMaterial
-            attach="material"
-            key="material"
-            color={"black"}
-          />
-        </mesh>
-        <group>
-          <Text
-            color="black"
-            size={2}
-            position={[...trnava, 50]}
-            children="Trnava"
-          />
-        </group>
+        <group>{boxes}</group>
+      </>
+      <>
+        <group>{labels}</group>
       </>
     </Canvas>
   );
