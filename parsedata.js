@@ -38,7 +38,7 @@ const load = async () => {
   }
   //console.log(imageArr);
   fs.writeFileSync(
-    "data/svk.json",
+    "data/population.json",
     JSON.stringify({
       data: imageArr,
       meta: { pxSize, coordinatesOrigin, w, h },
