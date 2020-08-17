@@ -16,12 +16,8 @@ const Camera = ({}) => {
   }, []);
 
   useFrame(() => {
-    /*
-    console.log(
-      camera.rotation.y.toPrecision(2),
-      camera.rotation.z.toPrecision(2)
-    );
-    */
+    //console.log(camera.position, camera.rotation);
+
     //console.log(camera.toJSON());
 
     if (camera.position.y < minYPosition) {
@@ -79,11 +75,11 @@ const Camera = ({}) => {
     // controls.minAzimuthAngle = Math.PI * 0;
     // controls.maxAzimuthAngle = Math.PI * 0;
 
-    camera.position.z = -200;
-    camera.position.y = 300;
-    camera.position.x = 0;
+    camera.position.x = -450;
+    camera.position.y = 170;
+    camera.position.z = -350;
 
-    //camera.lookAt(0, 0, 0);
+    camera.lookAt(0, 500, 500);
     controls.update();
 
     return () => {

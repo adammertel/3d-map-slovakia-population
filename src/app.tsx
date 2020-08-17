@@ -56,7 +56,13 @@ const App: React.FC = () => {
               color="black"
               size={2}
               position={[-pxs[0], 50, pxs[1]]}
-              children={settlement.properties.name}
+              children={
+                settlement.properties.name +
+                " - " +
+                settlement.properties.population
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+              }
             />
           </group>
         );
@@ -81,11 +87,16 @@ const App: React.FC = () => {
       <Camera />
       <rectAreaLight
         key="light"
-        intensity={100}
+        intensity={40}
         width={dataFile.data.length * 2}
         height={dataFile.data.length / 2}
-        position={[0, 100, 1000]}
+        position={[0, 0, 1000]}
         castShadow
+      />
+      <ambientLight
+        key="light-ambient"
+        intensity={1}
+        color={new THREE.Color("#fff")}
       />
       <>
         <group>{boxes}</group>
