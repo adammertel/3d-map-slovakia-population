@@ -1,5 +1,7 @@
 .cache
+.parcel-cache
 node_modules
+
 dist
 data/*.xml
 data/*.tiff

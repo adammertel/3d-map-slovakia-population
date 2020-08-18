@@ -1,10 +1,11 @@
 {
-  "name": "three-test",
+  "name": "3d-map-slovakia-population",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "docs/index.html",
   "scripts": {
-    "start": "parcel src/index.html",
+    "start": "parcel serve src/index.html",
+    "build": "parcel build src/index.html --dist-dir docs --no-scope-hoist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +20,7 @@
   "homepage": "https://github.com/adammertel/three-test#readme",
   "devDependencies": {
     "geotiff": "^1.0.0-beta.10",
+    "parcel": "^2.0.0-beta.1",
     "react-three-fiber": "^4.0.28",
     "three": "^0.115.0",
     "typescript": "^3.8.3"
