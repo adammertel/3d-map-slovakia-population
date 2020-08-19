@@ -8,11 +8,12 @@ import Box from "./box";
 import Camera from "./camera";
 import Plane from "./plane";
 import Text from "./text";
+import { stateStore } from "./";
 
 const dataFile = require("./../data/population.json");
 import settlements from "./../data/municipalities-slovakia.json";
 
-//console.log(data);
+console.log("data loaded");
 
 const translateCoordinatesToPx = ([x, y]) => {
   const meta = dataFile.meta;
@@ -23,14 +24,10 @@ const translateCoordinatesToPx = ([x, y]) => {
 };
 
 const App: React.FC = () => {
-  useEffect(() => {}, []);
-
-  const camera = new THREE.PerspectiveCamera(
-    60,
-    window.innerWidth / window.innerHeight,
-    1,
-    1000
-  );
+  const { loaded, setLoaded } = stateStore();
+  useEffect(() => {
+    console.log("app mount");
+  }, []);
 
   const labels = useMemo(() => {
     return settlements.features
@@ -83,8 +80,20 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <Canvas camera={camera} shadowMap>
+    <>
+      {!loaded && (
+        <div
+          style={{
+            fontSize: "4em",
+            position: "absolute",
+            top: "50%",
+            left: "20%",
+          }}
+        >
+          loading...
+        </div>
+      )}
+      <Canvas shadowMap>
         <Camera />
         <spotLight
           key="light"
@@ -115,7 +124,7 @@ const App: React.FC = () => {
       >
         info
       </a>
-    </div>
+    </>
   );
 };
 /*

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useFrame, useThree } from "react-three-fiber";
 import * as THREE from "three";
 import { MapControls } from "three/examples/jsm/controls/OrbitControls";
+import { stateStore } from "./";
 
 const minYPosition = 20;
 const keyPanningSpeed = 1;
@@ -11,8 +12,15 @@ const Camera = ({}) => {
 
   const [keyDown, setKeyDown] = useState(false);
 
+  const { loaded, setLoaded } = stateStore();
+
   useEffect(() => {
-    console.log("did mount");
+    document.addEventListener("keydown", (e) => {
+      setKeyDown(e.keyCode);
+    });
+    document.addEventListener("keyup", (e) => {
+      setKeyDown(false);
+    });
   }, []);
 
   useFrame(() => {
@@ -47,12 +55,7 @@ const Camera = ({}) => {
 
   useEffect(() => {
     // setting the key down/up listeners
-    document.addEventListener("keydown", (e) => {
-      setKeyDown(e.keyCode);
-    });
-    document.addEventListener("keyup", (e) => {
-      setKeyDown(false);
-    });
+
     console.log("setting camera");
 
     //camera.lookAt(new THREE.Vector3(300, 0, 0));
@@ -83,11 +86,13 @@ const Camera = ({}) => {
 
     controls.update();
 
+    setLoaded();
+
     return () => {
       controls.dispose();
     };
   }, [camera, gl]);
-  return null;
+  return loaded ? <>loading</> : null;
 };
 
 export default Camera;
