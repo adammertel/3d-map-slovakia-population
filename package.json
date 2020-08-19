@@ -28,6 +28,7 @@
   "dependencies": {
     "@types/node": "^13.13.0",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "zustand": "^3.0.1"
   }
 }
